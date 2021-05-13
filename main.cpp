@@ -1,5 +1,4 @@
 #include <opencv2/opencv.hpp>
-#include <iostream>
 
 /*
 *	
@@ -27,12 +26,12 @@ int main(int argc, char **argv)
 	classifier.load(path);
 	
 	std::vector<cv::Rect> faces;
-	std::string img_path = argv[1];//"/home/sreehari/Study/opencv/Lenna.jpg";
+	std::string img_path = argv[1];
 	frame = cv::imread(img_path);
 	classifier.detectMultiScale(frame, faces);
 	for(int i = 0; i < faces.size(); i++)
 		addMask(faces[i], frame);	
-	cv::imshow("Image", frame);	
+	cv::imshow("Output", frame);	
 	cv::waitKey(0);			
 	
 	return 0;
@@ -50,11 +49,6 @@ void addMask(cv::Rect face, cv::Mat img)
 	int x2 = face.br().x;
 	int y2 = face.br().y;
 	
-	//cv::Point p1(x1, y1);
-	//cv::Point p2(x2, y2);
-	//cv::Scalar color(0, 0, 255);
-	//cv::rectangle(img, p1, p2, color, 2);
-
 	int h1 = (y2-y1); //height
 	int w1 = (x2-x1); //width
 	int xt = x1; //x coordinate of top left corner
