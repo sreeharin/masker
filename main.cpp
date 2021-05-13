@@ -1,4 +1,5 @@
 #include <opencv2/opencv.hpp>
+#include <iostream>
 
 /*
 *	
@@ -11,32 +12,29 @@
 cv::Mat mask;
 void addMask(cv::Rect, cv::Mat);
 
-int main()
+int main(int argc, char **argv)
 {
+	if(argc < 2)
+	{
+		printf("Usage : %s <path of image>\n", argv[0]);
+		return -1;
+	}
 	mask = cv::imread("rsc/mask.png");
-	
-	cv::VideoCapture vid(0);
 	cv::Mat frame;
-	
-	int keyPress;
 	
 	std::string path = "rsc/haarcascade_frontalface_default.xml";
 	cv::CascadeClassifier classifier;
 	classifier.load(path);
 	
 	std::vector<cv::Rect> faces;
-	while(true)
-	{
-		vid.read(frame);
-		classifier.detectMultiScale(frame, faces);
-		for(int i = 0; i < faces.size(); i++)
-			addMask(faces[i], frame);	
-		cv::imshow("Image", frame);
-		
-		keyPress = cv::waitKey(1);
-		if(keyPress == 113) // 'q'
-			break;				
-	}
+	std::string img_path = argv[1];//"/home/sreehari/Study/opencv/Lenna.jpg";
+	frame = cv::imread(img_path);
+	classifier.detectMultiScale(frame, faces);
+	for(int i = 0; i < faces.size(); i++)
+		addMask(faces[i], frame);	
+	cv::imshow("Image", frame);	
+	cv::waitKey(0);			
+	
 	return 0;
 }
 
@@ -62,11 +60,24 @@ void addMask(cv::Rect face, cv::Mat img)
 	int xt = x1; //x coordinate of top left corner
 	int yt = y1; //y coordinate of top left corner
 	cv::Rect roi(xt, yt, w1, h1);
+	cv::Mat crop = img(roi);
 	
+		
+	//Adjust brightness and contrast of mask relative to the region
+	cv::Mat hsv;
+	cv::cvtColor(crop, hsv, cv::COLOR_BGR2HSV);
+	cv::Scalar values = cv::mean(hsv);
+	cv::Mat dB; //decreased brightness
+			
+	//Resize mask to fit in the region	
 	cv::Mat resized_mask;
 	cv::Size size(w1, h1);
 	cv::resize(mask, resized_mask, size);
 	
+	resized_mask.convertTo(dB, -1, 1, -(values[2]/4));
+	dB.copyTo(resized_mask);
+		
+	//Removes background from the mask so as to make the face visible
 	cv::Mat transparent;
 	cv::inRange(resized_mask, cv::Scalar(0, 0, 0), cv::Scalar(0, 0, 0), transparent);
 	resized_mask.copyTo(img(roi), 255-transparent);

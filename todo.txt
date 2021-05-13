@@ -1,2 +1,0 @@
-1. Adjust brightness and contrast of mask respect of region
-2. Decrease the width of the mask
