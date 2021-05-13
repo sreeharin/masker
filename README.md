@@ -19,9 +19,9 @@ Uses harr casscase identifier to identify face.
 # Sample Output
 <h3>Before:</h3>
 <br>
-<img src="https://i.ibb.co/b3Nn8Y7/modi-group.jpg">
+<img src="samples/input.jpg">
 <br>
 <h3>After:</h3>
 <br>
-<img src="">
+<img src="samples/output.png">
 </br>
