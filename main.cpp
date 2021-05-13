@@ -57,7 +57,7 @@ void addMask(cv::Rect face, cv::Mat img)
 	cv::Mat crop = img(roi);
 	
 		
-	//Adjust brightness and contrast of mask relative to the region
+	//Adjust brightness of mask relative to the region
 	cv::Mat hsv;
 	cv::cvtColor(crop, hsv, cv::COLOR_BGR2HSV);
 	cv::Scalar values = cv::mean(hsv);
