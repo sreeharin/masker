@@ -23,5 +23,5 @@ Uses harr casscase identifier to identify face.
 <br>
 <h3>After:</h3>
 <br>
-<img src="samples/output.png">
+<img src="samples/Output.jpg">
 </br>
