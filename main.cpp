@@ -29,8 +29,10 @@ int main(int argc, char **argv)
 	std::string img_path = argv[1];
 	frame = cv::imread(img_path);
 	classifier.detectMultiScale(frame, faces);
+	
 	for(int i = 0; i < faces.size(); i++)
-		addMask(faces[i], frame);	
+		addMask(faces[i], frame);
+	cv::imwrite("Output.jpg", frame);	
 	cv::imshow("Output", frame);	
 	cv::waitKey(0);			
 	
@@ -53,17 +55,17 @@ void addMask(cv::Rect face, cv::Mat img)
 	int w1 = (x2-x1); //width
 	int xt = x1; //x coordinate of top left corner
 	int yt = y1; //y coordinate of top left corner
+	
+	w1 = (w1 - w1*0.05);
 	cv::Rect roi(xt, yt, w1, h1);
 	cv::Mat crop = img(roi);
 	
-		
 	//Adjust brightness of mask relative to the region
 	cv::Mat hsv;
 	cv::cvtColor(crop, hsv, cv::COLOR_BGR2HSV);
 	cv::Scalar values = cv::mean(hsv);
 	cv::Mat dB; //decreased brightness
 			
-	//Resize mask to fit in the region	
 	cv::Mat resized_mask;
 	cv::Size size(w1, h1);
 	cv::resize(mask, resized_mask, size);
